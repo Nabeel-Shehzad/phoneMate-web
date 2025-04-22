@@ -28,8 +28,8 @@ $result = $con->query($sql);
 if ($result && $result->num_rows > 0) {
   $status = $result->fetch_assoc();
 
-  // Start output
-  echo '<div data-status-id="' . $statusId . '">';
+  // Start output - add id to make it easier to select
+  echo '<div id="orderDetailsData" data-status-id="' . $statusId . '" data-status-type="' . $status['status_type'] . '" data-amount-due="' . $status['amount_due'] . '">';
 
   // Status badge
   $statusClass = '';
@@ -167,7 +167,7 @@ if ($result && $result->num_rows > 0) {
     while ($item = $itemsResult->fetch_assoc()) {
       $itemStatusClass = '';
       $itemId = isset($item['item_id']) ? $item['item_id'] : 0;
-      $sellId = $item['sell_id'];
+      $sellId = isset($item['sell_id']) ? $item['sell_id'] : 0;
 
       // Check if the status comes from order_item_status or items_sold
       if (isset($item['item_status'])) {
@@ -272,6 +272,15 @@ if ($result && $result->num_rows > 0) {
     echo '<div class="alert alert-warning">No items found for this order. The tracking ID "' . $status['tracking_id'] . '" does not match any items in the database.</div>';
   }
 
+  // Add Clear Dues button directly in the content for payment_due orders
+  if ($status['status_type'] == 'payment_due' && $status['amount_due'] > 0) {
+    echo '<div class="row mt-4">
+            <div class="col-md-12 text-center">
+              <button type="button" class="btn btn-danger btn-lg" id="clearDuesInline" onclick="clearBuyerDues(' . $statusId . ')">Clear Buyer Dues (PKR ' . number_format($status['amount_due'], 2) . ')</button>
+            </div>
+          </div>';
+  }
+  
   echo '</div>';
 } else {
   echo '<div class="alert alert-danger">Order status not found</div>';

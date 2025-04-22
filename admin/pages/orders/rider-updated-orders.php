@@ -300,6 +300,7 @@ $riderStatsResult = $con->query($riderStatsSql);
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <?php if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] == 'super_admin') { ?>
           <button type="button" class="btn btn-primary" id="markComplete">Mark as Processed</button>
+          <button type="button" class="btn btn-danger" id="clearDues">Clear Buyer Dues</button>
         <?php } ?>
       </div>
     </div>
@@ -310,7 +311,35 @@ $riderStatsResult = $con->query($riderStatsSql);
 
 <!-- Custom JavaScript for this page -->
 <script>
+  // Function to clear buyer dues
+  function clearBuyerDues(statusId) {
+    if (confirm('Are you sure you want to clear all buyer dues for this order? This will mark the order as fully delivered.')) {
+      fetch('clear_buyer_dues.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'statusId=' + statusId
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Buyer dues cleared successfully!');
+          location.reload();
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        alert('An error occurred while processing the request.');
+      });
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
+    // Define button variables at the top
+    var markCompleteBtn = document.getElementById('markComplete');
+    var clearDuesBtn = document.getElementById('clearDues');
     // Add click event listeners to all "View Details" buttons
     var viewButtons = document.querySelectorAll('.view-details-btn');
     viewButtons.forEach(function(button) {
@@ -335,6 +364,10 @@ $riderStatsResult = $con->query($riderStatsSql);
           .then(response => response.text())
           .then(data => {
             document.getElementById('orderDetailsContent').innerHTML = data;
+            
+            // Check if this is a payment_due order and show/hide appropriate buttons
+            // No conditional logic - both buttons will always be visible
+            console.log('Order details loaded - both buttons should be visible');
           })
           .catch(error => {
             document.getElementById('orderDetailsContent').innerHTML = '<div class="alert alert-danger">Error loading order details: ' + error + '</div>';
@@ -343,10 +376,10 @@ $riderStatsResult = $con->query($riderStatsSql);
     });
 
     // Add click event for the "Mark as Processed" button
-    var markCompleteBtn = document.getElementById('markComplete');
     if (markCompleteBtn) {
       markCompleteBtn.addEventListener('click', function() {
-        var statusId = document.getElementById('orderDetailsContent').getAttribute('data-status-id');
+        var orderDetailsData = document.getElementById('orderDetailsData');
+        var statusId = orderDetailsData ? orderDetailsData.getAttribute('data-status-id') : null;
 
         fetch('process_rider_update.php', {
             method: 'POST',
@@ -367,6 +400,36 @@ $riderStatsResult = $con->query($riderStatsSql);
           .catch(error => {
             alert('An error occurred while processing the request.');
           });
+      });
+    }
+    
+    // Add click event for the "Clear Dues" button
+    if (clearDuesBtn) {
+      clearDuesBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to clear all buyer dues for this order? This will mark the order as fully delivered.')) {
+          var orderDetailsData = document.getElementById('orderDetailsData');
+          var statusId = orderDetailsData ? orderDetailsData.getAttribute('data-status-id') : null;
+
+          fetch('clear_buyer_dues.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: 'statusId=' + statusId
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert('Buyer dues cleared successfully!');
+                location.reload();
+              } else {
+                alert('Error: ' + data.message);
+              }
+            })
+            .catch(error => {
+              alert('An error occurred while processing the request.');
+            });
+        }
       });
     }
   });
