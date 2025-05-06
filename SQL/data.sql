@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 19, 2025 at 11:15 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Host: 127.0.0.1:3306
+-- Generation Time: May 06, 2025 at 05:25 PM
+-- Server version: 10.11.10-MariaDB
+-- PHP Version: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `u650672385_phonemate`
+-- Database: `u650672385_PhoneMate`
 --
 
 --
@@ -119,7 +119,21 @@ INSERT INTO `buyer_notification` (`id`, `message`, `date`, `is_read`, `fk_buyer_
 (28, 'Your order has been delivered!', '2025-03-25', 'unread', 15),
 (29, 'Your order has been approved and is in delivery!', '2025-04-08', 'unread', 20),
 (30, 'Your order has been approved and is in delivery!', '2025-04-17', 'unread', 15),
-(31, 'Your order has been delivered!', '2025-04-17', 'unread', 15);
+(31, 'Your order has been delivered!', '2025-04-17', 'unread', 15),
+(32, 'Your order has been approved and is in delivery!', '2025-04-23', 'unread', 2),
+(33, 'Your order has been approved and is in delivery!', '2025-04-23', 'unread', 2),
+(34, 'Your order has been approved and is in delivery!', '2025-04-30', 'unread', 2),
+(35, 'Your order has been approved and is in delivery!', '2025-04-30', 'unread', 2),
+(36, 'Your order has been approved and is in delivery!', '2025-04-30', 'unread', 2),
+(37, 'Your order has been approved and is in delivery!', '2025-04-30', 'unread', 2),
+(38, 'Your order has been approved and is in delivery!', '2025-04-30', 'unread', 2),
+(39, 'Your order has been approved and is in delivery!', '2025-04-30', 'unread', 2),
+(40, 'Your order has been approved and is in delivery!', '2025-04-30', 'unread', 2),
+(41, 'Your order has been approved and is in delivery!', '2025-05-04', 'unread', 2),
+(42, 'Your order has been approved and is in delivery!', '2025-05-04', 'unread', 2),
+(43, 'Your order has been approved and is in delivery!', '2025-05-04', 'unread', 2),
+(44, 'Your order has been approved and is in delivery!', '2025-05-04', 'unread', 2),
+(45, 'Your order has been approved and is in delivery!', '2025-05-06', 'unread', 15);
 
 --
 -- Dumping data for table `category`
@@ -173,7 +187,21 @@ INSERT INTO `delivery` (`delivery_id`, `delivery_quantity`, `total_cash`, `deliv
 (20, 100, 12500, 'in_delivery', '2025-03-23', 2, 15),
 (21, 90, 4800, 'in_delivery', '2025-03-23', 1, 15),
 (22, 10, 1400, 'in_delivery', '2025-04-08', 18, 20),
-(23, 10, 1700, 'delivered', '2025-04-17', 23, 15);
+(23, 10, 1700, 'delivered', '2025-04-17', 23, 15),
+(24, 190, 85500, 'in_delivery', '2025-04-23', 3, 2),
+(25, 190, 85500, 'in_delivery', '2025-04-23', 3, 2),
+(26, 100, 10000, 'in_delivery', '2025-04-30', 6, 2),
+(27, 190, 85500, 'in_delivery', '2025-04-30', 3, 2),
+(28, 50, 12500, 'in_delivery', '2025-04-30', 2, 2),
+(29, 200, 54000, 'in_delivery', '2025-04-30', 8, 2),
+(30, 10, 25000, 'in_delivery', '2025-04-30', 13, 2),
+(31, 300, 180000, 'in_delivery', '2025-04-30', 12, 2),
+(32, 190, 85500, 'in_delivery', '2025-04-30', 3, 2),
+(33, 100, 10000, 'in_delivery', '2025-05-04', 6, 2),
+(34, 300, 60000, 'in_delivery', '2025-05-04', 11, 2),
+(35, 1, 35000, 'in_delivery', '2025-05-04', 24, 2),
+(36, 300, 180000, 'in_delivery', '2025-05-04', 12, 2),
+(37, 20, 70000, 'in_delivery', '2025-05-06', 14, 15);
 
 --
 -- Dumping data for table `items`
@@ -181,19 +209,19 @@ INSERT INTO `delivery` (`delivery_id`, `delivery_quantity`, `total_cash`, `deliv
 
 INSERT INTO `items` (`item_id`, `item_category`, `item_brand`, `item_number`, `item_description`, `item_image`, `item_price`, `item_quantity`, `more_quantity`, `item_sold`, `agreement_date`, `item_profit`, `item_status`, `fk_item_tracking_id`) VALUES
 (1, 'Hand-free', 'Samsung', 'm8 95 c-pro', 'Genuine Handfrees, good sound level, no distortion, integrated mice, overall longer life span', 'item_67e8422d89f62.jpg', 131, 0, 0, 0, '2026-02-19', 5, 'processed', 1),
-(2, 'Hand-free', 'Audionic', 'Audionic Special z-100', 'Experience crystal-clear sound with the Audionic Special Z-100 Handsfree. Designed for comfort and performance, this handsfree delivers rich audio quality with deep bass and crisp highs, making it perfect for music, calls, and gaming. The ergonomic design ensures a secure fit, while the in-line mic and control buttons let you manage calls and media effortlessly. Built with durable materials, the Z-100 is a reliable companion for everyday use.', '2elevated-view-black-earphone-coffee-cup-white-background.jpg', 200, 499600, 0, 0, '2026-02-28', 10, 'processed', 1),
-(3, 'Hand-free', 'Samsung', 'yu-09 9876', 'Unlock immersive sound with the Audionic YU-09 9876 Handsfree, designed to complement your Samsung devices. This handsfree delivers dynamic audio with rich bass, sharp mids, and clear highs for an outstanding listening experience. Its ergonomic design ensures a snug, comfortable fit, while the built-in mic and control buttons make managing calls and music a breeze. Crafted with durable materials, it\\\'s built to last — perfect for everyday use.', '3988.jpg', 390, 17290, 0, 1520, '2026-02-28', 10, 'processed', 1),
+(2, 'Hand-free', 'Audionic', 'Audionic Special z-100', 'Experience crystal-clear sound with the Audionic Special Z-100 Handsfree. Designed for comfort and performance, this handsfree delivers rich audio quality with deep bass and crisp highs, making it perfect for music, calls, and gaming. The ergonomic design ensures a secure fit, while the in-line mic and control buttons let you manage calls and media effortlessly. Built with durable materials, the Z-100 is a reliable companion for everyday use.', '2elevated-view-black-earphone-coffee-cup-white-background.jpg', 200, 499500, 0, 0, '2026-02-28', 10, 'processed', 1),
+(3, 'Hand-free', 'Samsung', 'yu-09 9876', 'Unlock immersive sound with the Audionic YU-09 9876 Handsfree, designed to complement your Samsung devices. This handsfree delivers dynamic audio with rich bass, sharp mids, and clear highs for an outstanding listening experience. Its ergonomic design ensures a snug, comfortable fit, while the built-in mic and control buttons make managing calls and music a breeze. Crafted with durable materials, it\\\'s built to last — perfect for everyday use.', '3988.jpg', 390, 16720, 0, 1520, '2026-02-28', 10, 'processed', 1),
 (4, 'Hand-free', 'Huawei', 'mini g-pro', 'Experience powerful sound in a compact design with the Audionic Mini G-Pro Handsfree, perfectly optimized for Huawei devices. Whether you\\\'re enjoying music, taking calls, or gaming, this handsfree delivers crystal-clear audio with deep bass and balanced tones. Its lightweight, ergonomic fit ensures all-day comfort, while the in-line mic and controls make switching between tracks and calls effortless.', '4sound-wave-icon-near-earphone-blackboard.jpg', 200, 0, 0, 0, '2026-02-01', 10, 'processed', 1),
-(5, 'Data Cable', 'Samsung', 'c-11', 'Stay connected and powered up with the Audionic Data Cable, designed for fast and reliable charging and data transfer for Samsung devices. Built with high-quality materials, this cable ensures durability and efficient performance, whether you’re syncing files or charging on the go. The sleek, tangle-free design makes it perfect for everyday use.', '5pexels-pixabay-159304.jpg', 50, 600, 0, 200, '2026-02-28', 10, 'processed', 1),
-(6, 'Data Cable', 'Audionic', 'l-11', '**Audionic Data Cable — Fast & Reliable**  \\r\\nCharge and sync your devices with confidence using the **Audionic Data Cable**. Designed for durability and speed, this cable ensures fast charging and stable data transfer, making it a must-have for everyday use. Its sturdy build and flexible design prevent wear and tear, while universal compatibility makes it perfect for a wide range of devices.', '6pexels-karolina-grabowska-4219862.jpg', 70, 6303, 0, 97, '2026-02-28', 10, 'processed', 1),
+(5, 'Data Cable', 'Samsung', 'c-11', 'Stay connected and powered up with the Audionic Data Cable, designed for fast and reliable charging and data transfer for Samsung devices. Built with high-quality materials, this cable ensures durability and efficient performance, whether you’re syncing files or charging on the go. The sleek, tangle-free design makes it perfect for everyday use.', '5pexels-pixabay-159304.jpg', 50, 400, 0, 200, '2026-02-28', 10, 'processed', 1),
+(6, 'Data Cable', 'Audionic', 'l-11', '**Audionic Data Cable — Fast & Reliable**  \\r\\nCharge and sync your devices with confidence using the **Audionic Data Cable**. Designed for durability and speed, this cable ensures fast charging and stable data transfer, making it a must-have for everyday use. Its sturdy build and flexible design prevent wear and tear, while universal compatibility makes it perfect for a wide range of devices.', '6pexels-karolina-grabowska-4219862.jpg', 70, 6103, 0, 97, '2026-02-28', 10, 'processed', 1),
 (7, 'Data Cable', 'Huawei', 'iphone-smart 111', 'Experience seamless charging and data transfer with the Audionic iPhone-Smart 111 DC, designed specifically for Huawei devices. This high-performance cable ensures fast, reliable power delivery and smooth syncing, all in a durable, tangle-free design. Perfect for everyday use, it combines strength and efficiency to keep your devices powered up and connected.', '7pexels-matthiaszomer-914912.jpg', 90, 50000, 0, 0, '2026-02-28', 10, 'processed', 1),
-(8, 'Power Bank', 'Samsung', 'pb-098', 'Stay charged on the go with the Audionic Samsung Power Bank. Designed for convenience and reliability, this compact power bank delivers fast, efficient charging for your Samsung devices. With a sleek, lightweight design and high-capacity battery, it’s perfect for travel, work, or daily use, ensuring your devices stay powered whenever you need them.', '8pexels-zion-10104281.jpg', 230, 80000, 0, 0, '2026-02-28', 10, 'processed', 1),
+(8, 'Power Bank', 'Samsung', 'pb-098', 'Stay charged on the go with the Audionic Samsung Power Bank. Designed for convenience and reliability, this compact power bank delivers fast, efficient charging for your Samsung devices. With a sleek, lightweight design and high-capacity battery, it’s perfect for travel, work, or daily use, ensuring your devices stay powered whenever you need them.', '8pexels-zion-10104281.jpg', 230, 79800, 0, 0, '2026-02-28', 10, 'processed', 1),
 (9, 'Power Bank', 'Audionic', 'pb-z-long-67', 'Stay powered anytime, anywhere with the Audionic Power Bank. Designed for fast and efficient charging, this portable powerhouse keeps your devices running throughout the day. Its sleek, lightweight design makes it easy to carry, while the high-capacity battery ensures multiple charges for your smartphone, tablet, or other gadgets. Perfect for travel, work, or emergencies!\\r\\n', '9pexels-zion-10104320.jpg', 150, 600, 0, 0, '2026-02-28', 10, 'processed', 1),
 (10, 'Head Phone', 'Samsung', 'c99', 'Enjoy rich, high-quality audio with Audionic Headphones for Samsung. Designed for crystal-clear sound and deep bass, these headphones deliver an exceptional listening experience for music, calls, and gaming. The cushioned ear cups and adjustable headband provide all-day comfort, while the durable build ensures long-lasting performance. Perfect for Samsung devices, they offer seamless connectivity and powerful sound on the go.', '10pexels-moose-photos-170195-1037992.jpg', 200, 3999, 0, 0, '2026-02-28', 10, 'processed', 1),
-(11, 'Head Phone', 'Audionic', 'g88', 'Experience powerful, crystal-clear audio with Audionic Headphones. Designed for music lovers and gamers alike, these headphones deliver deep bass, balanced mids, and crisp highs for an immersive sound experience. With soft, cushioned ear cups and an adjustable headband, they provide lasting comfort for extended listening sessions. Built with durable materials, they’re perfect for everyday use at home, work, or on the go.', '11pexels-parag-deshmukh-180046-577769.jpg', 150, 27600, 0, 0, '2026-02-28', 10, 'processed', 1),
-(12, 'Head Phone', 'Huawei', 'h01', 'Enjoy high-definition audio with Audionic Headphones for Huawei. Engineered for rich sound quality, these headphones deliver deep bass and clear vocals, enhancing your music, calls, and gaming experience. The lightweight design, cushioned ear cups, and adjustable headband ensure all-day comfort, while the sturdy build guarantees lasting durability. Perfect for Huawei devices, they offer seamless connectivity and exceptional performance.', '12pexels-garrettmorrow-1649771.jpg', 400, 3000, 0, 0, '2026-02-28', 10, 'processed', 1),
-(13, 'Smart Watch', 'Samsung', 'new-gen 99', 'Stay connected and in control with the Audionic Smartwatch for Samsung. Designed for seamless compatibility, this sleek smartwatch tracks your fitness, monitors health metrics, and keeps you updated with notifications — all from your wrist. With a vibrant display, long battery life, and customizable features, it\\\'s the perfect companion for your Samsung device, balancing style and practicality effortlessly.', '13pexels-luckysam-51011.jpg', 2000, 2000, 0, 0, '2026-02-28', 10, 'processed', 1),
-(14, 'Smart Watch', 'Audionic', 'new SmartW 100', 'Stay connected and track your health with the Audionic Smartwatch. Designed for style and functionality, this sleek smartwatch offers fitness tracking, heart rate monitoring, and smart notifications right on your wrist. With a vibrant display, long battery life, and customizable features, it’s the perfect companion for your active lifestyle — whether at work, the gym, or on the go.', '14pexels-brett-sayles-1080745.jpg', 3000, 500, 0, 0, '2026-02-28', 10, 'processed', 1),
+(11, 'Head Phone', 'Audionic', 'g88', 'Experience powerful, crystal-clear audio with Audionic Headphones. Designed for music lovers and gamers alike, these headphones deliver deep bass, balanced mids, and crisp highs for an immersive sound experience. With soft, cushioned ear cups and an adjustable headband, they provide lasting comfort for extended listening sessions. Built with durable materials, they’re perfect for everyday use at home, work, or on the go.', '11pexels-parag-deshmukh-180046-577769.jpg', 150, 27300, 0, 0, '2026-02-28', 10, 'processed', 1),
+(12, 'Head Phone', 'Huawei', 'h01', 'Enjoy high-definition audio with Audionic Headphones for Huawei. Engineered for rich sound quality, these headphones deliver deep bass and clear vocals, enhancing your music, calls, and gaming experience. The lightweight design, cushioned ear cups, and adjustable headband ensure all-day comfort, while the sturdy build guarantees lasting durability. Perfect for Huawei devices, they offer seamless connectivity and exceptional performance.', '12pexels-garrettmorrow-1649771.jpg', 400, 2302, 0, -2, '2026-02-28', 10, 'processed', 1),
+(13, 'Smart Watch', 'Samsung', 'new-gen 99', 'Stay connected and in control with the Audionic Smartwatch for Samsung. Designed for seamless compatibility, this sleek smartwatch tracks your fitness, monitors health metrics, and keeps you updated with notifications — all from your wrist. With a vibrant display, long battery life, and customizable features, it\\\'s the perfect companion for your Samsung device, balancing style and practicality effortlessly.', '13pexels-luckysam-51011.jpg', 2000, 1990, 0, 0, '2026-02-28', 10, 'processed', 1),
+(14, 'Smart Watch', 'Audionic', 'new SmartW 100', 'Stay connected and track your health with the Audionic Smartwatch. Designed for style and functionality, this sleek smartwatch offers fitness tracking, heart rate monitoring, and smart notifications right on your wrist. With a vibrant display, long battery life, and customizable features, it’s the perfect companion for your active lifestyle — whether at work, the gym, or on the go.', '14pexels-brett-sayles-1080745.jpg', 3000, 480, 0, 0, '2026-02-28', 10, 'processed', 1),
 (15, 'Smart Watch', 'Huawei', 'yen 788', 'Stay ahead with the Huawei Smartwatch, designed to blend elegance with advanced technology. Track your fitness, monitor your heart rate, and receive smart notifications, all on a vibrant, easy-to-read display. With a sleek design, long battery life, and customizable watch faces, it’s the perfect companion for your daily routine, workouts, and everything in between.', '15pexels-vishven-solanki-1441477-2861929.jpg', 5000, 5000, 0, 0, '2026-02-28', 10, 'processed', 1),
 (16, 'Hand-free', 'Huawei', 'pro plus', 'its a good quality handfree ', '16hawai.webp', 3200, 37, 0, 0, '2025-03-30', 5, 'processed', 1),
 (17, 'Smart Watch', 'Huawei', '101', 'it is newly lanched', '16hawai.webp', 1100, 70, 0, 6, '2025-10-04', 10, 'processed', 1),
@@ -202,69 +230,27 @@ INSERT INTO `items` (`item_id`, `item_category`, `item_brand`, `item_number`, `i
 (20, 'Hand-free', 'Huawei', 'i phone 11', 'latest in i phone technology', '20i phone hand free.png', 300, 190, 0, 0, '2025-03-06', 10, 'processed', 2),
 (21, 'Smart Watch', 'Huawei', '2025 hawi', 'Boss Pro Smart watch\\r\\n', '21smart watch.png', 9000, 20, 0, 0, '2025-03-08', 10, 'review', 2),
 (22, 'Data Cable', 'Samsung', 'i phone cable 27w ', '27 w pd magnet\\r\\n27 w pd n0n magnet', '22WhatsApp Image 2025-03-28 at 01.01.26_22a783bf.jpg', 220, 2000, 0, 0, '2025-10-05', 5, 'approved', 2),
-(23, 'Hand-free', 'Samsung', 'advace ANC', 'adance three pin and ANC technology', '23handfree.png', 150, 990, 0, 10, '2025-06-30', 5, 'processed', 1);
+(23, 'Hand-free', 'Samsung', 'advace ANC', 'adance three pin and ANC technology', '23handfree.png', 150, 990, 0, 10, '2025-06-30', 5, 'processed', 1),
+(24, 'Smart Watch', 'Samsung', 'watch 6', 'Samsung Galaxy watch 6', '24samsung_fe.jpg', 30000, 98, 0, 0, '2025-05-31', 5, 'processed', 1);
 
 --
 -- Dumping data for table `items_sold`
 --
 
 INSERT INTO `items_sold` (`sell_id`, `sell_price`, `sell_quantity`, `sell_date`, `sell_status`, `tracking`, `fk_buyer_id`, `fk_item_id`) VALUES
-(19, 4800, 2, '2025-03-01', 'completed', 'zyyxi4', 2, 1),
-(20, 14000, 1, '2025-03-01', 'completed', 'zyyxi4', 2, 5),
-(21, 10000, 1, '2025-03-01', 'completed', 'zyyxi4', 2, 6),
-(23, 4000, 1, '2025-03-01', 'completed', 'zyyxi4', 2, 9),
-(24, 14000, 1, '2025-03-01', 'approved', 'wrh42r', 12, 5),
-(27, 12500, 1, '2025-03-01', 'approved', 'wrh42r', 12, 2),
-(28, 25000, 1, '2025-03-01', 'approved', 'wrh42r', 12, 13),
-(29, 60000, 1, '2025-03-01', 'approved', 'wrh42r', 12, 15),
-(38, 4000, 1, '2025-03-01', 'approved', 'wrh42r', 12, 9),
-(39, 25000, 1, '2025-03-01', 'pending', '3f98d0', 13, 4),
-(40, 14000, 1, '2025-03-01', 'approved', '3f98d0', 13, 5),
-(41, 60000, 1, '2025-03-01', 'pending', '3f98d0', 13, 11),
-(42, 3850, 5, '2025-03-01', 'shipped', 'vsi8iw', 2, 16),
-(43, 54000, 2, '2025-03-01', 'shipped', 'vsi8iw', 2, 8),
-(44, 160, 1, '2025-03-04', 'pending', 'zc1m9g', 14, 1),
-(46, 200, 1, '2025-03-04', 'pending', 'zc1m9g', 14, 11),
-(47, 250, 1, '2025-03-04', 'pending', 'zc1m9g', 14, 2),
-(48, 4800, 1, '2025-03-04', 'pending', '8nnrqc', 2, 1),
-(55, 10000, 1, '2025-03-04', 'completed', 'ydzy8l', 14, 6),
-(56, 2700, 3, '2025-03-15', 'shipped', 'ilyqgj', 15, 17),
-(57, 4800, 2, '2025-03-15', 'shipped', 'ilyqgj', 15, 1),
-(58, 25000, 4, '2025-03-15', 'shipped', 'ilyqgj', 15, 4),
-(59, 85500, 4, '2025-03-15', 'completed', 'ilyqgj', 15, 3),
-(63, 4800, 1, '2025-03-16', 'pending', '5ba0bz', 2, 1),
-(64, 12500, 1, '2025-03-16', 'pending', '5ba0bz', 2, 2),
-(65, 85500, 1, '2025-03-16', 'pending', '5ba0bz', 2, 3),
-(66, 60000, 1, '2025-03-16', 'partially_delivered', 'pr5fvk', 2, 11),
-(67, 30000, 3, '2025-03-16', 'partially_delivered', 'pr5fvk', 2, 6),
-(68, 4800, 3, '2025-03-17', 'partially_delivered', '1j3gi7', 15, 1),
-(69, 12500, 2, '2025-03-17', 'partially_delivered', '1j3gi7', 15, 2),
-(70, 3850, 3, '2025-03-17', 'partially_delivered', '1j3gi7', 15, 16),
-(72, 3850, 5, '2025-03-18', 'delivered_with_dues', 'ibd9zh', 15, 16),
-(73, 4800, 2, '2025-03-18', 'delivered_with_dues', 'ibd9zh', 15, 1),
-(74, 50000, 2, '2025-03-18', 'pending', '6bt8lb', 2, 4),
-(75, 50000, 2, '2025-03-18', 'pending', '1nx7b0', 2, 4),
-(76, 3850, 5, '2025-03-18', 'approved', 'og5jpi', 15, 16),
-(77, 12500, 1, '2025-03-20', 'pending', '6wejhw', 19, 2),
-(78, 12500, 1, '2025-03-20', 'pending', '8yzdzp', 19, 2),
-(79, 4800, 1, '2025-03-22', 'rejected', 'wtjdxq', 15, 1),
-(80, 12500, 1, '2025-03-22', 'rejected', 'wtjdxq', 15, 2),
-(81, 85500, 1, '2025-03-22', 'rejected', 'wtjdxq', 15, 3),
-(82, 25000, 1, '2025-03-22', 'rejected', 'wtjdxq', 15, 4),
-(89, 8100, 3, '2025-03-24', 'pending', 'lzcdbg', 2, 17),
-(90, 85500, 1, '2025-03-24', 'pending', '03nvs7', 2, 3),
-(91, 12500, 1, '2025-03-24', 'pending', 'g9njhi', 2, 2),
-(92, 85500, 1, '2025-03-24', 'pending', 'g9njhi', 2, 3),
-(93, 10000, 1, '2025-03-24', 'pending', 'ng065d', 2, 6),
-(94, 60000, 1, '2025-03-24', 'pending', 'ng065d', 2, 11),
-(95, 25000, 1, '2025-03-25', 'pending', 'g090uk', 15, 4),
-(96, 300000, 5, '2025-03-25', 'pending', 'b991gn', 15, 11),
-(97, 3300, 3, '2025-03-25', 'pending', 'eza711', 15, 19),
-(98, 3800, 5, '2025-03-25', 'pending', 'b3iu5p', 15, 20),
-(99, 10000, 1, '2025-03-29', 'pending', 'eawjyr', 20, 6),
-(100, 1400, 1, '2025-03-29', 'approved', 'z3c1c0', 20, 18),
-(101, 10000, 1, '2025-03-31', 'pending', 'ges6gv', 20, 6),
-(102, 1700, 2, '2025-04-17', 'completed', '5dropj', 15, 23);
+(106, 12500, 1, '2025-04-30', 'completed', 'kb9zli', 2, 2),
+(107, 85500, 1, '2025-04-30', 'completed', 'kb9zli', 2, 3),
+(108, 10000, 1, '2025-04-30', 'completed', 'kb9zli', 2, 6),
+(109, 54000, 1, '2025-04-30', 'pay_with_dues', 'w1csdh', 2, 8),
+(110, 25000, 1, '2025-04-30', 'pay_with_dues', 'w1csdh', 2, 13),
+(111, 180000, 3, '2025-04-30', 'partially_delivered', '9dkzol', 2, 12),
+(112, 85500, 1, '2025-04-30', 'rejected', 'ldp15g', 2, 3),
+(113, 10000, 1, '2025-05-04', 'approved', '4x6jyc', 2, 6),
+(114, 60000, 1, '2025-05-04', 'approved', '4x6jyc', 2, 11),
+(115, 35000, 1, '2025-05-04', 'completed', '19htc6', 2, 24),
+(117, 60000, 1, '2025-05-04', 'pending', 'mm9yz4', 2, 12),
+(118, 180000, 3, '2025-05-04', 'partially_delivered', 'uy5baf', 2, 12),
+(119, 70000, 2, '2025-05-06', 'completed', 'rx8bgg', 15, 14);
 
 --
 -- Dumping data for table `item_adjustment`
@@ -293,7 +279,8 @@ INSERT INTO `item_adjustment` (`item_adj_id`, `item_adj_price`, `pieces_pu`, `it
 (20, 220, 5, 'normal_selling', 19),
 (21, 11000, 1, 'hot_selling', 21),
 (22, 251, 10, 'top_selling', 22),
-(23, 170, 5, 'hot_selling', 23);
+(23, 170, 5, 'hot_selling', 23),
+(24, 35000, 1, 'normal_selling', 24);
 
 --
 -- Dumping data for table `item_tracking`
@@ -308,41 +295,43 @@ INSERT INTO `item_tracking` (`item_tracking_id`, `fk_wh_id`, `fk_ws_id`) VALUES
 --
 
 INSERT INTO `order_delivery_status` (`status_id`, `tracking_id`, `status_type`, `amount_collected`, `amount_due`, `returned_items`, `rejection_reason`, `notes`, `update_date`, `fk_rider_id`) VALUES
-(1, 'ibd9zh', 'payment_due', 2000.00, 8850.00, NULL, NULL, NULL, '2025-04-17 10:47:41', 1),
-(2, '5dropj', 'delivered_full', 3400.00, 0.00, NULL, NULL, NULL, '2025-04-17 17:11:29', 1),
-(3, '1j3gi7', 'delivered_partial', 29800.00, 0.00, NULL, NULL, NULL, '2025-04-17 17:12:27', 1),
-(4, 'wtjdxq', 'rejected', 0.00, 0.00, NULL, 'He didn\'t accept the order', NULL, '2025-04-17 17:12:46', 1),
-(5, 'pr5fvk', 'delivered_partial', 60000.00, 0.00, NULL, NULL, NULL, '2025-04-19 07:54:17', 1);
+(7, 'kb9zli', 'delivered_full', 108000.00, 0.00, NULL, NULL, NULL, '2025-04-30 07:39:19', 1),
+(8, 'w1csdh', 'payment_due', 50000.00, 29000.00, NULL, NULL, NULL, '2025-04-30 07:45:37', 1),
+(9, '9dkzol', 'delivered_partial', 36000.00, 0.00, NULL, NULL, NULL, '2025-04-30 07:51:11', 1),
+(10, 'ldp15g', 'rejected', 0.00, 0.00, NULL, 'He said he didn\'t order it', NULL, '2025-04-30 07:56:01', 1),
+(11, '19htc6', 'delivered_full', 35000.00, 0.00, NULL, NULL, NULL, '2025-05-04 07:27:32', 1),
+(12, 'uy5baf', 'delivered_partial', 120000.00, 0.00, NULL, NULL, NULL, '2025-05-04 07:57:02', 1),
+(13, 'rx8bgg', 'delivered_full', 140000.00, 0.00, NULL, NULL, NULL, '2025-05-06 10:15:07', 1);
 
 --
 -- Dumping data for table `order_item_status`
 --
 
 INSERT INTO `order_item_status` (`item_status_id`, `fk_status_id`, `fk_sell_id`, `item_status`, `returned_quantity`, `delivered_quantity`) VALUES
-(1, 1, 73, 'delivered', 0, 2),
-(2, 1, 72, 'delivered', 0, 5),
-(3, 2, 102, 'delivered', 0, 2),
-(4, 3, 68, 'delivered', 1, 2),
-(5, 3, 69, 'delivered', 1, 1),
-(6, 3, 70, 'delivered', 1, 2),
-(7, 4, 79, 'delivered', 0, 1),
-(8, 4, 80, 'delivered', 0, 1),
-(9, 4, 81, 'delivered', 0, 1),
-(10, 4, 82, 'delivered', 0, 1),
-(11, 5, 67, 'returned', 3, 0),
-(12, 5, 66, 'delivered', 0, 1);
+(14, 7, 106, 'delivered', 0, 1),
+(15, 7, 107, 'delivered', 0, 1),
+(16, 7, 108, 'delivered', 0, 1),
+(17, 8, 109, 'delivered', 0, 1),
+(18, 8, 110, 'delivered', 0, 1),
+(19, 9, 111, 'delivered', 1, 2),
+(20, 10, 112, 'delivered', 0, 1),
+(21, 11, 115, 'delivered', 0, 1),
+(22, 12, 118, 'delivered', 1, 2),
+(23, 13, 119, 'delivered', 0, 2);
 
 --
 -- Dumping data for table `order_rider_assignment`
 --
 
 INSERT INTO `order_rider_assignment` (`assignment_id`, `tracking_id`, `fk_rider_id`, `assignment_date`, `assignment_status`, `notes`) VALUES
-(1, '1j3gi7', 1, '2025-04-13', 'completed', 'Deliver on time'),
-(2, 'ibd9zh', 1, '2025-04-13', 'completed', 'make sure these items should be safe and on time. don\\\'t get late'),
-(3, '5dropj', 1, '2025-04-17', 'completed', ''),
-(4, 'pr5fvk', 1, '2025-04-17', 'completed', 'Take care of it'),
-(5, 'wtjdxq', 1, '2025-04-17', 'completed', 'deliver on time'),
-(6, 'wrh42r', 1, '2025-04-17', 'assigned', '');
+(8, 'kb9zli', 1, '2025-04-30', 'completed', ''),
+(9, 'w1csdh', 1, '2025-04-30', 'completed', ''),
+(10, '9dkzol', 1, '2025-04-30', 'completed', ''),
+(11, 'ldp15g', 1, '2025-04-30', 'completed', ''),
+(12, '4x6jyc', 1, '2025-05-04', 'assigned', ''),
+(13, '19htc6', 1, '2025-05-04', 'completed', ''),
+(14, 'uy5baf', 1, '2025-05-04', 'completed', ''),
+(15, 'rx8bgg', 1, '2025-05-06', 'completed', '');
 
 --
 -- Dumping data for table `rider`
@@ -383,7 +372,37 @@ INSERT INTO `rider_notification` (`id`, `message`, `date`, `is_read`, `fk_rider_
 (25, 'Rider ahmad logged in at 2025-04-18 05:18:40', '2025-04-18', 'unread', 1),
 (26, 'You have 2 pending deliveries', '2025-04-18', 'unread', 1),
 (27, 'Rider ahmad logged in at 2025-04-19 07:50:45', '2025-04-19', 'unread', 1),
-(28, 'You have 2 pending deliveries', '2025-04-19', 'unread', 1);
+(28, 'You have 2 pending deliveries', '2025-04-19', 'unread', 1),
+(29, 'Rider ahmad logged in at 2025-04-19 08:48:00', '2025-04-19', 'unread', 1),
+(30, 'You have 1 pending deliveries', '2025-04-19', 'unread', 1),
+(31, 'New order #03nvs7 has been assigned to you', '2025-04-23', 'unread', 1),
+(32, 'Rider ahmad logged in at 2025-04-23 12:15:08', '2025-04-23', 'unread', 1),
+(33, 'You have 2 pending deliveries', '2025-04-23', 'unread', 1),
+(34, 'Order #03nvs7 has been assigned to you', '2025-04-23', 'unread', 1),
+(35, 'Rider ahmad logged in at 2025-04-23 13:42:50', '2025-04-23', 'unread', 1),
+(36, 'You have 1 pending deliveries', '2025-04-23', 'unread', 1),
+(37, 'New order #kb9zli has been assigned to you', '2025-04-30', 'unread', 1),
+(38, 'Rider ahmad logged in at 2025-04-30 07:38:22', '2025-04-30', 'unread', 1),
+(39, 'You have 1 pending deliveries', '2025-04-30', 'unread', 1),
+(40, 'New order #w1csdh has been assigned to you', '2025-04-30', 'unread', 1),
+(41, 'Rider ahmad logged in at 2025-04-30 07:44:12', '2025-04-30', 'unread', 1),
+(42, 'You have 1 pending deliveries', '2025-04-30', 'unread', 1),
+(43, 'New order #9dkzol has been assigned to you', '2025-04-30', 'unread', 1),
+(44, 'Rider ahmad logged in at 2025-04-30 07:50:09', '2025-04-30', 'unread', 1),
+(45, 'You have 1 pending deliveries', '2025-04-30', 'unread', 1),
+(46, 'New order #ldp15g has been assigned to you', '2025-04-30', 'unread', 1),
+(47, 'Rider ahmad logged in at 2025-04-30 07:55:33', '2025-04-30', 'unread', 1),
+(48, 'You have 1 pending deliveries', '2025-04-30', 'unread', 1),
+(49, 'New order #4x6jyc has been assigned to you', '2025-05-04', 'unread', 1),
+(50, 'Rider ahmad logged in at 2025-05-04 06:55:16', '2025-05-04', 'unread', 1),
+(51, 'You have 1 pending deliveries', '2025-05-04', 'unread', 1),
+(52, 'New order #19htc6 has been assigned to you', '2025-05-04', 'unread', 1),
+(53, 'Rider ahmad logged in at 2025-05-04 07:27:13', '2025-05-04', 'unread', 1),
+(54, 'You have 2 pending deliveries', '2025-05-04', 'unread', 1),
+(55, 'New order #uy5baf has been assigned to you', '2025-05-04', 'unread', 1),
+(56, 'Rider ahmad logged in at 2025-05-04 07:33:29', '2025-05-04', 'unread', 1),
+(57, 'You have 2 pending deliveries', '2025-05-04', 'unread', 1),
+(58, 'New order #rx8bgg has been assigned to you', '2025-05-06', 'unread', 1);
 
 --
 -- Dumping data for table `warehouse`

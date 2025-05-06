@@ -107,6 +107,7 @@ if (!str_contains($uri, 'signup.php') && !str_contains($uri, 'login.php')) {
                                 <a href="../profiles/wholesalers.php" class="dropdown-item"><i class="fa fa-arrow-right" aria-hidden="true"></i> Suppliers</a>
                                 <a href="../profiles/shopkeepers.php" class="dropdown-item"><i class="fa fa-arrow-right" aria-hidden="true"></i> Buyers</a>
                                 <a href="../profiles/riders.php" class="dropdown-item"><i class="fa fa-arrow-right" aria-hidden="true"></i> Riders</a>
+                                <a href="../business_developers/list_bds.php" class="dropdown-item"><i class="fa fa-arrow-right" aria-hidden="true"></i> Business Developers</a>
                             </div>
                         </div>
                         <div class="nav-item dropdown">
