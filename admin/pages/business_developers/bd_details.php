@@ -30,7 +30,6 @@ $statsSql = "SELECT
                 COUNT(DISTINCT b.buyer_id) as total_buyers,
                 COUNT(DISTINCT iso.sell_id) as total_orders,
                 SUM(iso.sell_price * iso.sell_quantity) as total_order_value,
-                SUM(CASE WHEN iso.sell_status = 'delivered' THEN iso.sell_price * iso.sell_quantity ELSE 0 END) as delivered_value,
                 SUM(ods.amount_collected) as total_collected,
                 SUM(ods.amount_due) as total_due
              FROM business_developer bd
@@ -46,7 +45,6 @@ $stats = $statsResult->fetch_assoc();
 $buyersSql = "SELECT b.*,
                 COUNT(DISTINCT iso.sell_id) as order_count,
                 SUM(iso.sell_price * iso.sell_quantity) as total_order_value,
-                SUM(CASE WHEN iso.sell_status = 'delivered' THEN iso.sell_price * iso.sell_quantity ELSE 0 END) as delivered_value,
                 SUM(ods.amount_collected) as amount_collected,
                 SUM(ods.amount_due) as amount_due
               FROM buyer b
@@ -143,14 +141,26 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
                 <i class="fa fa-money-bill fa-3x text-primary"></i>
                 <div class="ms-3">
-                    <p class="mb-2">Total Sales</p>
+                    <p class="mb-2">Order Value (All)</p>
                     <h6 class="mb-0">PKR <?= number_format($stats['total_order_value'] ?: 0, 2) ?></h6>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row g-4 mt-1">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-wallet fa-3x text-warning"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Amount Collected</p>
+                    <h6 class="mb-0">PKR <?= number_format($stats['total_collected'] ?: 0, 2) ?></h6>
                 </div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-wallet fa-3x text-primary"></i>
+                <i class="fa fa-exclamation-circle fa-3x text-danger"></i>
                 <div class="ms-3">
                     <p class="mb-2">Amount Due</p>
                     <h6 class="mb-0">PKR <?= number_format($stats['total_due'] ?: 0, 2) ?></h6>

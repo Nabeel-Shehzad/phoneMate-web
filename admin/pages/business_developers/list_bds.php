@@ -10,12 +10,14 @@ $con = $db->conn;
 $bdStatsSql = "SELECT bd.bd_id, bd.bd_name, bd.bd_contact, bd.bd_email, bd.bd_status, bd.bd_referal_code,
                 COUNT(DISTINCT b.buyer_id) as buyer_count,
                 COUNT(DISTINCT iso.sell_id) as order_count,
-                SUM(CASE WHEN iso.sell_status = 'delivered' THEN iso.sell_price * iso.sell_quantity ELSE 0 END) as total_sales
+                SUM(iso.sell_price * iso.sell_quantity) as total_order_value,
+                SUM(ods.amount_collected) as total_collected
               FROM business_developer bd
               LEFT JOIN buyer b ON bd.bd_id = b.fk_bd_id
               LEFT JOIN items_sold iso ON b.buyer_id = iso.fk_buyer_id
+              LEFT JOIN order_delivery_status ods ON iso.tracking = ods.tracking_id
               GROUP BY bd.bd_id, bd.bd_name, bd.bd_contact, bd.bd_email, bd.bd_status, bd.bd_referal_code
-              ORDER BY total_sales DESC";
+              ORDER BY total_order_value DESC";
 
 $bdStatsResult = $con->query($bdStatsSql);
 ?>
@@ -60,7 +62,6 @@ $bdStatsResult = $con->query($bdStatsSql);
                         <th scope="col">Referral Code</th>
                         <th scope="col">Buyers</th>
                         <th scope="col">Orders</th>
-                        <th scope="col">Total Sales</th>
                         <th scope="col">Status</th>
                         <th scope="col">Actions</th>
                     </tr>
@@ -90,7 +91,6 @@ $bdStatsResult = $con->query($bdStatsSql);
                                 <td><span class="badge bg-info"><?= htmlspecialchars($bd['bd_referal_code']) ?></span></td>
                                 <td><?= $bd['buyer_count'] ?></td>
                                 <td><?= $bd['order_count'] ?></td>
-                                <td>PKR <?= number_format($bd['total_sales'] ?: 0, 2) ?></td>
                                 <td><span class="badge <?= $statusClass ?>"><?= ucfirst($bd['bd_status']) ?></span></td>
                                 <td>
                                     <a class="btn btn-sm btn-primary" href="bd_details.php?id=<?= $bd['bd_id'] ?>">
@@ -171,8 +171,10 @@ document.addEventListener('DOMContentLoaded', function() {
     <?php
     // Prepare data for chart
     $chartLabels = [];
-    $chartData = [];
+    $chartDataAll = [];
+    $chartDataCollected = [];
     $chartColors = [];
+    $hasData = false;
     
     if ($bdStatsResult && $bdStatsResult->num_rows > 0) {
         // Reset the result pointer
@@ -184,13 +186,27 @@ document.addEventListener('DOMContentLoaded', function() {
             if ($count >= 5) break; // Limit to top 5
             
             $chartLabels[] = $bd['bd_name'];
-            $chartData[] = $bd['total_sales'] ?: 0;
+            $chartDataAll[] = $bd['total_order_value'] ?: 0;
+            $chartDataCollected[] = $bd['total_collected'] ?: 0;
             
             // Generate random color
             $chartColors[] = 'rgba(' . rand(100, 255) . ', ' . rand(100, 255) . ', ' . rand(100, 255) . ', 0.7)';
             
+            // Check if we have any non-zero data
+            if (($bd['total_order_value'] ?: 0) > 0 || ($bd['total_collected'] ?: 0) > 0) {
+                $hasData = true;
+            }
+            
             $count++;
         }
+    }
+    
+    // If no data or all zeros, add a placeholder
+    if (empty($chartLabels) || !$hasData) {
+        $chartLabels = ['No Data Available'];
+        $chartDataAll = [0];
+        $chartDataCollected = [0];
+        $chartColors = ['rgba(200, 200, 200, 0.5)'];
     }
     ?>
     
@@ -200,13 +216,22 @@ document.addEventListener('DOMContentLoaded', function() {
         type: 'bar',
         data: {
             labels: <?= json_encode($chartLabels) ?>,
-            datasets: [{
-                label: 'Total Sales (PKR)',
-                data: <?= json_encode($chartData) ?>,
-                backgroundColor: <?= json_encode($chartColors) ?>,
-                borderColor: <?= json_encode($chartColors) ?>,
-                borderWidth: 1
-            }]
+            datasets: [
+                {
+                    label: 'Total Order Value (PKR)',
+                    data: <?= json_encode($chartDataAll) ?>,
+                    backgroundColor: 'rgba(78, 115, 223, 0.7)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Amount Collected (PKR)',
+                    data: <?= json_encode($chartDataCollected) ?>,
+                    backgroundColor: 'rgba(28, 200, 138, 0.7)',
+                    borderColor: 'rgba(28, 200, 138, 1)',
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -233,6 +258,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 legend: {
                     labels: {
                         color: '#fff'
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(context.parsed.y);
+                            }
+                            return label;
+                        }
                     }
                 }
             }
