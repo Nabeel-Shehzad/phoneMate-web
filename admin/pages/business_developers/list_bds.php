@@ -9,9 +9,12 @@ $con = $db->conn;
 // Calculate BD statistics
 $bdStatsSql = "SELECT bd.bd_id, bd.bd_name, bd.bd_contact, bd.bd_email, bd.bd_status, bd.bd_referal_code,
                 COUNT(DISTINCT b.buyer_id) as buyer_count,
-                COUNT(DISTINCT iso.sell_id) as order_count,
+                COUNT(DISTINCT iso.tracking) as order_count,
                 SUM(iso.sell_price * iso.sell_quantity) as total_order_value,
-                SUM(ods.amount_collected) as total_collected
+                SUM(ods.amount_collected) as total_collected,
+                (SELECT COUNT(*) FROM bd_referral_bonus WHERE fk_bd_id = bd.bd_id) as referral_count,
+                (SELECT SUM(bonus_amount) FROM bd_referral_bonus WHERE fk_bd_id = bd.bd_id) as total_bonus_amount,
+                (SELECT SUM(bonus_amount) FROM bd_referral_bonus WHERE fk_bd_id = bd.bd_id AND is_paid = 0) as pending_bonus_amount
               FROM business_developer bd
               LEFT JOIN buyer b ON bd.bd_id = b.fk_bd_id
               LEFT JOIN items_sold iso ON b.buyer_id = iso.fk_buyer_id
@@ -62,6 +65,7 @@ $bdStatsResult = $con->query($bdStatsSql);
                         <th scope="col">Referral Code</th>
                         <th scope="col">Buyers</th>
                         <th scope="col">Orders</th>
+                        <th scope="col">Referrals</th>
                         <th scope="col">Status</th>
                         <th scope="col">Actions</th>
                     </tr>
@@ -91,6 +95,7 @@ $bdStatsResult = $con->query($bdStatsSql);
                                 <td><span class="badge bg-info"><?= htmlspecialchars($bd['bd_referal_code']) ?></span></td>
                                 <td><?= $bd['buyer_count'] ?></td>
                                 <td><?= $bd['order_count'] ?></td>
+                                <td><?= $bd['referral_count'] ?: 0 ?></td>
                                 <td><span class="badge <?= $statusClass ?>"><?= ucfirst($bd['bd_status']) ?></span></td>
                                 <td>
                                     <a class="btn btn-sm btn-primary" href="bd_details.php?id=<?= $bd['bd_id'] ?>">

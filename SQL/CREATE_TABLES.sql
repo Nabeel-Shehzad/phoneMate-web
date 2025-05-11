@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 06, 2025 at 05:24 PM
+-- Generation Time: May 11, 2025 at 10:30 AM
 -- Server version: 10.11.10-MariaDB
 -- PHP Version: 7.2.34
 
@@ -109,6 +109,22 @@ CREATE TABLE `bd_pending_payments` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bd_referral_bonus`
+--
+
+CREATE TABLE `bd_referral_bonus` (
+  `bonus_id` int(11) NOT NULL,
+  `bonus_amount` int(11) NOT NULL DEFAULT 500,
+  `date_earned` datetime NOT NULL DEFAULT current_timestamp(),
+  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
+  `payment_date` datetime DEFAULT NULL,
+  `fk_bd_id` int(11) NOT NULL,
+  `fk_buyer_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `brand`
 --
 
@@ -153,7 +169,7 @@ CREATE TABLE `buyer` (
   `buyer_email` varchar(255) NOT NULL,
   `buyer_password` varchar(255) NOT NULL,
   `buyer_status` varchar(50) NOT NULL,
-  `fk_bd_id` int(11) NOT NULL,
+  `fk_bd_id` int(11) DEFAULT NULL,
   `fk_rider_id` int(11) NOT NULL,
   `location` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -573,6 +589,14 @@ ALTER TABLE `bd_pending_payments`
   ADD KEY `fk_bd_pending_payments_bd_id` (`fk_bd_id`);
 
 --
+-- Indexes for table `bd_referral_bonus`
+--
+ALTER TABLE `bd_referral_bonus`
+  ADD PRIMARY KEY (`bonus_id`),
+  ADD KEY `fk_referral_bonus_bd_id` (`fk_bd_id`),
+  ADD KEY `fk_referral_bonus_buyer_id` (`fk_buyer_id`);
+
+--
 -- Indexes for table `brand`
 --
 ALTER TABLE `brand`
@@ -811,6 +835,12 @@ ALTER TABLE `bd_pending_payments`
   MODIFY `bdpp_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `bd_referral_bonus`
+--
+ALTER TABLE `bd_referral_bonus`
+  MODIFY `bonus_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `brand`
 --
 ALTER TABLE `brand`
@@ -1018,6 +1048,13 @@ ALTER TABLE `bd_payment_records`
 --
 ALTER TABLE `bd_pending_payments`
   ADD CONSTRAINT `fk_bd_pending_payments_bd_id` FOREIGN KEY (`fk_bd_id`) REFERENCES `business_developer` (`bd_id`);
+
+--
+-- Constraints for table `bd_referral_bonus`
+--
+ALTER TABLE `bd_referral_bonus`
+  ADD CONSTRAINT `fk_referral_bonus_bd_id` FOREIGN KEY (`fk_bd_id`) REFERENCES `business_developer` (`bd_id`),
+  ADD CONSTRAINT `fk_referral_bonus_buyer_id` FOREIGN KEY (`fk_buyer_id`) REFERENCES `buyer` (`buyer_id`);
 
 --
 -- Constraints for table `buyer_notification`

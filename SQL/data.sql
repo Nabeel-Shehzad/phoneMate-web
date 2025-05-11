@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 06, 2025 at 05:25 PM
+-- Generation Time: May 11, 2025 at 10:33 AM
 -- Server version: 10.11.10-MariaDB
 -- PHP Version: 7.2.34
 
@@ -54,7 +54,30 @@ INSERT INTO `admin_notification` (`id`, `message`, `date`, `is_read`, `admin_rol
 (19, 'New buyer registration: saqib Ali', '2025-03-09', 'unread', 'admin', 1),
 (20, 'New buyer registration: Test Google', '2025-03-29', 'unread', 'admin', 1),
 (21, 'New rider registration: ahmad', '2025-04-10', 'unread', 'admin', 1),
-(22, 'Rider updated: ahmad', '2025-04-10', 'unread', 'admin', 1);
+(22, 'Rider updated: ahmad', '2025-04-10', 'unread', 'admin', 1),
+(23, 'New Business Developer registered: Shakeel (Referral Code: BD55VTW63S)', '2025-05-06', 'unread', 'super_admin', 1),
+(24, 'New buyer registration: Shehzad', '2025-05-07', 'unread', 'admin', 1),
+(25, 'New buyer registration: Shehzad', '2025-05-07', 'unread', 'admin', 1),
+(26, 'New Business Developer registered: Mudassar (Referral Code: BDQ375LNAN)', '2025-05-11', 'unread', 'super_admin', 1),
+(27, 'New buyer registration: Tayyab', '2025-05-11', 'unread', 'admin', 1),
+(28, 'New buyer registration: Tayyab', '2025-05-11', 'unread', 'admin', 1),
+(29, 'New buyer registration: Khurram', '2025-05-11', 'unread', 'admin', 1);
+
+--
+-- Dumping data for table `bd_notification`
+--
+
+INSERT INTO `bd_notification` (`id`, `message`, `date`, `is_read`, `fk_bd_id`) VALUES
+(1, 'Welcome to PhoneMate! Your account has been created successfully.', '2025-05-06', 'unread', 1),
+(2, 'Welcome to PhoneMate! Your account has been created successfully.', '2025-05-11', 'unread', 2),
+(3, 'You earned a referral bonus of 500 PKR for new buyer: Khurram', '2025-05-11', 'unread', 2);
+
+--
+-- Dumping data for table `bd_referral_bonus`
+--
+
+INSERT INTO `bd_referral_bonus` (`bonus_id`, `bonus_amount`, `date_earned`, `is_paid`, `payment_date`, `fk_bd_id`, `fk_buyer_id`) VALUES
+(1, 500, '2025-05-11 10:21:46', 0, NULL, 2, 25);
 
 --
 -- Dumping data for table `brand`
@@ -64,6 +87,14 @@ INSERT INTO `brand` (`brand_id`, `brand_name`) VALUES
 (1, 'Samsung'),
 (2, 'Audionic'),
 (3, 'Huawei');
+
+--
+-- Dumping data for table `business_developer`
+--
+
+INSERT INTO `business_developer` (`bd_id`, `bd_name`, `bd_address`, `bd_contact`, `bd_cnic`, `bd_image`, `bd_email`, `bd_password`, `bd_status`, `bd_referal_code`) VALUES
+(1, 'Shakeel', 'Gujranwala model town', '03107724234', '654738745663', 'profile.png', 'shakeel@gmail.com', '$2y$10$Xh3bvHKiZZzJAIb7ndOY1uo.2sSHTqpTgOpU5q.1.hFnWCS6XeDfq', 'active', 'BD55VTW63S'),
+(2, 'Mudassar', 'Sialkot', '03004536754', '124537842984', 'portrait-white-man-isolated.jpg', 'mudassar@gmail.com', '$2y$10$F2lM7hSAzSGx8SO/alg4q.x4CFVpm3eZQQCQ1vwzEWyJ7u3XgLv6W', 'active', 'BDQ375LNAN');
 
 --
 -- Dumping data for table `buyer`
@@ -82,7 +113,10 @@ INSERT INTO `buyer` (`buyer_id`, `buyer_name`, `buyer_address`, `buyer_contact`,
 (15, 'ghulam murtza ', 'gujranwala ', '03016889980', '3410180923785', 'default.jpg', 'shop_1740857169.jpg', 'murtzag1986@gmail.com', '$2y$10$EPcIUmLbwhO6VKQVvKGuWutnHU43RoGTYEtBhI4AuXDlVdI8Ud88.', 'approved', 1, 1, '32.3235238,74.3553244'),
 (18, 'test 2', 'talvandi', '03006268334', '3410180923785', 'default.jpg', 'shop_1741083404.jpg', 'test2@gmail.com', '$2y$10$lt0gM0DyVlYCodQ/ioZaSuy6OHRQTZJ85EKdmin6ywJPEQ0HLUia.', 'approved', 1, 1, '32.2853335,74.2147461'),
 (19, 'saqib Ali', 'Rahwali cant', '03061009955', '3410183068023', 'default.jpg', 'shop_1741511071.jpg', 'cguj1205@gmail.com', '$2y$10$f7Yigrp9oIxr0F3sRtE3Y.ena0DpHLUinHrZwP6We6uiXVQpxYgzi', 'approved', 1, 1, '32.2014661,74.2071655'),
-(20, 'Test Google', 'Google Store', '12345678964', '3268495346654', 'default.jpg', 'shop_1743236035.jpg', 'google@gmail.com', '$2y$10$C/fFWTRXGld18/HiPhc5t.j7dVjV2E8CsPFdu8PyYKj28pQTtE8/2', 'approved', 1, 1, '32.3192254,74.3517092');
+(20, 'Test Google', 'Google Store', '12345678964', '3268495346654', 'default.jpg', 'shop_1743236035.jpg', 'google@gmail.com', '$2y$10$C/fFWTRXGld18/HiPhc5t.j7dVjV2E8CsPFdu8PyYKj28pQTtE8/2', 'approved', 1, 1, '32.3192254,74.3517092'),
+(22, 'Shehzad', 'daska kalan', '03214569853', '3648167986835', 'shop_1746613546.png', 'shop_1746613548.jpg', 'shehzad@gmail.com', '$2y$10$IehfltPXD0fdvP2dkHeE1.cwovVSXnaikqnEIO/kPh7bMWUaZWLs6', 'approved', 1, 1, '32.3235397,74.3553225'),
+(24, 'Tayyab', 'daska', '03124567946', '3615724986494', 'default.jpg', 'shop_1746958822.jpg', 'tayyab@gmail.com', '$2y$10$ufDFeYkcNDWiupiwG6id.O5FDM0Q42am5CQw4R7QIvEDoNkSgQdHG', 'pending', NULL, 1, '32.3235554,74.3553397'),
+(25, 'Khurram', 'Sialkot', '03164875461', '3461976494389', 'default.jpg', 'shop_1746958904.jpg', 'khurram@gmail.com', '$2y$10$okavmsm8IIeMvAE..aA1jeMjciSjXe8LK54k.P3zgHvlGTD.C701i', 'approved', 2, 1, '32.3235549,74.3553452');
 
 --
 -- Dumping data for table `buyer_notification`
