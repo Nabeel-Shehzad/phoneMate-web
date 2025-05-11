@@ -236,55 +236,38 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
             </form>
         </div>
         <div class="table-responsive">
-            <table class="table text-start align-middle table-hover mb-0">
+            <table id="linkedBuyersTable" class="table text-start align-middle table-bordered table-hover mb-0">
                 <thead>
                     <tr class="text-white">
-                        <th scope="col">#</th>
+                        <th scope="col">ID</th>
                         <th scope="col">Name</th>
                         <th scope="col">Contact</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Address</th>
                         <th scope="col">Orders</th>
-                        <th scope="col">Total Value</th>
-                        <th scope="col">Collected</th>
-                        <th scope="col">Due</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col">Order Value</th>
+                        <th scope="col">Amount Collected</th>
+                        <th scope="col">Amount Due</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $count = 1;
                     if ($buyersResult && $buyersResult->num_rows > 0) {
                         while ($buyer = $buyersResult->fetch_assoc()) {
-                            // Apply search filter if provided
-                            if (isset($_GET['search']) && !empty($_GET['search'])) {
-                                $search = strtolower($_GET['search']);
-                                if (
-                                    strpos(strtolower($buyer['buyer_name']), $search) === false &&
-                                    strpos(strtolower($buyer['buyer_contact']), $search) === false
-                                ) {
-                                    continue; // Skip this buyer if it doesn't match the search
-                                }
-                            }
-
-                            // Determine status class
-                            $statusClass = $buyer['buyer_status'] == 'active' ? 'bg-success' : 'bg-danger';
                     ?>
                             <tr>
-                                <td><?= $count++ ?></td>
+                                <td><?= $buyer['buyer_id'] ?></td>
                                 <td><?= htmlspecialchars($buyer['buyer_name']) ?></td>
                                 <td><?= htmlspecialchars($buyer['buyer_contact']) ?></td>
-                                <td><span class="badge <?= $statusClass ?>"><?= ucfirst($buyer['buyer_status']) ?></span></td>
-                                <td><?= $buyer['order_count'] ?: 0 ?></td>
-                                <td>PKR <?= number_format($buyer['total_order_value'] ?: 0, 2) ?></td>
-                                <td>PKR <?= number_format($buyer['amount_collected'] ?: 0, 2) ?></td>
-                                <td>PKR <?= number_format($buyer['amount_due'] ?: 0, 2) ?></td>
+                                <td><?= htmlspecialchars($buyer['buyer_address']) ?></td>
+                                <td><?= $buyer['order_count'] ?></td>
+                                <td data-order="<?= $buyer['total_order_value'] ?: 0 ?>">PKR <?= number_format($buyer['total_order_value'] ?: 0, 2) ?></td>
+                                <td data-order="<?= $buyer['amount_collected'] ?: 0 ?>">PKR <?= number_format($buyer['amount_collected'] ?: 0, 2) ?></td>
+                                <td data-order="<?= $buyer['amount_due'] ?: 0 ?>">PKR <?= number_format($buyer['amount_due'] ?: 0, 2) ?></td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-primary view-buyer-orders" data-id="<?= $buyer['buyer_id'] ?>">
-                                        <i class="fa fa-shopping-cart"></i> Orders
-                                    </button>
-                                    <a href="../buyers/buyer_details.php?id=<?= $buyer['buyer_id'] ?>" class="btn btn-sm btn-info">
                                         <i class="fa fa-eye"></i> Details
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                     <?php
@@ -306,7 +289,7 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
             <h6 class="mb-0">Referral Bonuses</h6>
         </div>
         <div class="table-responsive">
-            <table class="table text-start align-middle table-bordered table-hover mb-0">
+            <table id="referralBonusTable" class="table text-start align-middle table-bordered table-hover mb-0">
                 <thead>
                     <tr class="text-white">
                         <th scope="col">Bonus ID</th>
@@ -326,14 +309,14 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                                 <td><?= $bonus['bonus_id'] ?></td>
                                 <td><?= htmlspecialchars($bonus['buyer_name']) ?></td>
                                 <td><?= htmlspecialchars($bonus['buyer_contact']) ?></td>
-                                <td>PKR <?= number_format($bonus['bonus_amount'], 2) ?></td>
-                                <td><?= date('d M Y H:i', strtotime($bonus['date_earned'])) ?></td>
-                                <td>
+                                <td data-order="<?= $bonus['bonus_amount'] ?>">PKR <?= number_format($bonus['bonus_amount'], 2) ?></td>
+                                <td data-order="<?= strtotime($bonus['date_earned']) ?>"><?= date('d M Y H:i', strtotime($bonus['date_earned'])) ?></td>
+                                <td data-order="<?= $bonus['is_paid'] ?>">
                                     <span class="badge <?= $bonus['is_paid'] ? 'bg-success' : 'bg-warning' ?>">
                                         <?= $bonus['is_paid'] ? 'Paid' : 'Pending' ?>
                                     </span>
                                 </td>
-                                <td>
+                                <td data-order="<?= $bonus['payment_date'] ? strtotime($bonus['payment_date']) : 0 ?>">
                                     <?= $bonus['payment_date'] ? date('d M Y H:i', strtotime($bonus['payment_date'])) : 'N/A' ?>
                                 </td>
                                 <td>
@@ -349,7 +332,7 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                         <?php endwhile; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="7" class="text-center">No referral bonuses found</td>
+                            <td colspan="8" class="text-center">No referral bonuses found</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -392,10 +375,113 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
 
 <?php include_once('../../includes/footer.php'); ?>
 
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+
+<!-- Custom DataTables Styling -->
+<style>
+    div.dataTables_wrapper div.dataTables_length {
+        text-align: left !important;
+        float: left !important;
+    }
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: right !important;
+        float: right !important;
+    }
+    div.dataTables_wrapper div.dataTables_info {
+        text-align: left !important;
+        float: left !important;
+    }
+    div.dataTables_wrapper div.dataTables_paginate {
+        text-align: right !important;
+        float: right !important;
+    }
+    div.dataTables_wrapper div.dataTables_length label,
+    div.dataTables_wrapper div.dataTables_filter label {
+        margin-bottom: 0;
+        white-space: nowrap;
+        text-align: left;
+    }
+    div.dataTables_wrapper .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+    
+    /* Enhanced Pagination Styling */
+    .dataTables_paginate .paginate_button {
+        padding: 0.3em 0.8em !important;
+        margin: 0 0.2em !important;
+        border: 1px solid #6c757d !important;
+        border-radius: 0.25rem !important;
+        background-color: #2B2B2B !important;
+        color: #fff !important;
+    }
+    
+    .dataTables_paginate .paginate_button:hover:not(.disabled):not(.current) {
+        background-color: #3d3d3d !important;
+        color: #fff !important;
+        border-color: #6c757d !important;
+    }
+    
+    .dataTables_paginate .paginate_button.current {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: #fff !important;
+        font-weight: bold !important;
+    }
+    
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+    }
+</style>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
 <!-- Chart.js Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize DataTable for Linked Buyers
+        $('#linkedBuyersTable').DataTable({
+            "responsive": true,
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "order": [[0, "desc"]], // Sort by Buyer ID (descending) by default
+            "columnDefs": [
+                { "orderable": false, "targets": 8 } // Disable sorting on Actions column
+            ],
+            "language": {
+                "search": "Search buyers:",
+                "lengthMenu": "Show _MENU_ buyers per page",
+                "info": "Showing _START_ to _END_ of _TOTAL_ buyers",
+                "infoEmpty": "Showing 0 to 0 of 0 buyers",
+                "infoFiltered": "(filtered from _MAX_ total buyers)",
+                "zeroRecords": "No matching buyers found"
+            },
+            "dom": '<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row"<"col-sm-6"i><"col-sm-6"p>>'
+        });
+        
+        // Initialize DataTable for Referral Bonuses
+        $('#referralBonusTable').DataTable({
+            "responsive": true,
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "order": [[4, "desc"]], // Sort by Date Earned (descending) by default
+            "columnDefs": [
+                { "orderable": false, "targets": 7 } // Disable sorting on Actions column
+            ],
+            "language": {
+                "search": "Search bonuses:",
+                "lengthMenu": "Show _MENU_ bonuses per page",
+                "info": "Showing _START_ to _END_ of _TOTAL_ bonuses",
+                "infoEmpty": "Showing 0 to 0 of 0 bonuses",
+                "infoFiltered": "(filtered from _MAX_ total bonuses)",
+                "zeroRecords": "No matching bonuses found"
+            },
+            "dom": '<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row"<"col-sm-6"i><"col-sm-6"p>>'
+        });
         // Sales Chart
         const ctx = document.getElementById('salesChart').getContext('2d');
         new Chart(ctx, {
@@ -478,64 +564,76 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
         });
         
         // Pay Referral Bonus
-        const payBonusButtons = document.querySelectorAll('.pay-bonus-btn');
-        payBonusButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                if (confirm('Are you sure you want to mark this referral bonus as paid?')) {
-                    const bonusId = this.getAttribute('data-id');
-                    const bdId = this.getAttribute('data-bd-id');
-                    const button = this;
-                    
-                    // Disable the button and show loading state
-                    button.disabled = true;
-                    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
-                    
-                    // Process payment via AJAX
-                    fetch('pay_referral_bonus.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: 'bonus_id=' + bonusId + '&bd_id=' + bdId
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Show success message
-                                alert(data.message);
-                                
-                                // Update the UI
-                                const row = button.closest('tr');
-                                const statusCell = row.querySelector('td:nth-child(6)');
-                                const dateCell = row.querySelector('td:nth-child(7)');
-                                const actionCell = row.querySelector('td:nth-child(8)');
-                                
-                                statusCell.innerHTML = '<span class="badge bg-success">Paid</span>';
-                                dateCell.innerHTML = new Date().toLocaleString();
-                                actionCell.innerHTML = '<span class="text-muted">Paid</span>';
-                                
-                                // Update the statistics
-                                const totalBonusAmount = parseFloat(document.querySelector('.total-bonus-amount').innerText.replace('PKR ', '').replace(/,/g, ''));
-                                const paidBonusAmount = parseFloat(document.querySelector('.paid-bonus-amount').innerText.replace('PKR ', '').replace(/,/g, ''));
-                                const unpaidBonusAmount = parseFloat(document.querySelector('.unpaid-bonus-amount').innerText.replace('PKR ', '').replace(/,/g, ''));
-                                const bonusAmount = parseFloat(row.querySelector('td:nth-child(4)').innerText.replace('PKR ', '').replace(/,/g, ''));
-                                
-                                document.querySelector('.paid-bonus-amount').innerText = 'PKR ' + (paidBonusAmount + bonusAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                                document.querySelector('.unpaid-bonus-amount').innerText = 'PKR ' + (unpaidBonusAmount - bonusAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                            } else {
-                                // Show error message
-                                alert('Error: ' + data.message);
-                                button.disabled = false;
-                                button.innerHTML = '<i class="fa fa-money-bill"></i> Pay';
-                            }
-                        })
-                        .catch(error => {
-                            alert('Error processing payment: ' + error);
-                            button.disabled = false;
-                            button.innerHTML = '<i class="fa fa-money-bill"></i> Pay';
-                        });
-                }
-            });
+        $(document).on('click', '.pay-bonus-btn', function() {
+            if (confirm('Are you sure you want to mark this referral bonus as paid?')) {
+                const bonusId = $(this).data('id');
+                const bdId = $(this).data('bd-id');
+                const button = this;
+                const $row = $(button).closest('tr');
+                
+                // Disable the button and show loading state
+                $(button).prop('disabled', true);
+                $(button).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+                
+                // Process payment via AJAX
+                fetch('pay_referral_bonus.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'bonus_id=' + bonusId + '&bd_id=' + bdId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            alert(data.message);
+                            
+                            // Get the current date for display
+                            const currentDate = new Date();
+                            const formattedDate = currentDate.toLocaleString('en-US', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                            
+                            // Update the status cell
+                            $row.find('td:eq(5)').html('<span class="badge bg-success">Paid</span>');
+                            $row.find('td:eq(5)').attr('data-order', '1');
+                            
+                            // Update the payment date cell
+                            $row.find('td:eq(6)').html(formattedDate);
+                            $row.find('td:eq(6)').attr('data-order', Math.floor(currentDate.getTime() / 1000));
+                            
+                            // Update the action cell
+                            $row.find('td:eq(7)').html('<span class="text-muted">Paid</span>');
+                            
+                            // Just update the cells directly without reloading
+                            // No need to reload the entire table
+                            
+                            // Update the statistics
+                            const totalBonusAmount = parseFloat($('.total-bonus-amount').text().replace('PKR ', '').replace(/,/g, ''));
+                            const paidBonusAmount = parseFloat($('.paid-bonus-amount').text().replace('PKR ', '').replace(/,/g, ''));
+                            const unpaidBonusAmount = parseFloat($('.unpaid-bonus-amount').text().replace('PKR ', '').replace(/,/g, ''));
+                            const bonusAmount = parseFloat($row.find('td:eq(3)').text().replace('PKR ', '').replace(/,/g, ''));
+                            
+                            $('.paid-bonus-amount').text('PKR ' + (paidBonusAmount + bonusAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+                            $('.unpaid-bonus-amount').text('PKR ' + (unpaidBonusAmount - bonusAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+                        } else {
+                            // Show error message
+                            alert('Error: ' + data.message);
+                            $(button).prop('disabled', false);
+                            $(button).html('<i class="fa fa-money-bill"></i> Pay');
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error processing payment: ' + error);
+                        $(button).prop('disabled', false);
+                        $(button).html('<i class="fa fa-money-bill"></i> Pay');
+                    });
+            }
         });
     });
 </script>
