@@ -25,6 +25,12 @@ if (!$bdResult || $bdResult->num_rows == 0) {
 
 $bd = $bdResult->fetch_assoc();
 
+// Get BD commission history
+$commissionSql = "SELECT * FROM bd_monthly_commission 
+                 WHERE fk_bd_id = '$bd_id' 
+                 ORDER BY commission_month DESC";
+$commissionResult = $con->query($commissionSql);
+
 // Get BD statistics
 $statsSql = "SELECT 
                 COUNT(DISTINCT b.buyer_id) as total_buyers,
@@ -181,7 +187,7 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
             </div>
         </div>
     </div>
-    
+
     <!-- Referral Bonus Statistics -->
     <div class="row g-4 mt-1">
         <div class="col-sm-6 col-xl-3">
@@ -218,6 +224,73 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                     <p class="mb-2">Pending Bonus </p>
                     <h6 class="mb-0 unpaid-bonus-amount">PKR <?= number_format($stats['unpaid_bonus_amount'] ?: 0, 2) ?></h6>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Commission Statistics -->
+<div class="row g-4 mt-1">
+    <div class="col-12">
+        <div class="bg-secondary rounded p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0">Monthly Commissions</h5>
+                <button class="btn btn-primary calculate-commission" data-bd-id="<?= $bd_id ?>">
+                    Calculate Commission
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover text-start align-middle">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Total Sales</th>
+                            <th>Commission (1%)</th>
+                            <th>Status</th>
+                            <th>Payment Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($commissionResult && $commissionResult->num_rows > 0): ?>
+                            <?php while ($commission = $commissionResult->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?= date('F Y', strtotime($commission['commission_month'])) ?></td>
+                                    <td>PKR <?= number_format($commission['total_sales'], 2) ?></td>
+                                    <td>PKR <?= number_format($commission['commission_amount'], 2) ?></td>
+                                    <td>
+                                        <span class="badge <?= $commission['is_paid'] ? 'bg-success' : 'bg-warning' ?>">
+                                            <?= $commission['is_paid'] ? 'Paid' : 'Pending' ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <?= $commission['payment_date'] ?
+                                            date('d M Y H:i', strtotime($commission['payment_date'])) :
+                                            'Not paid' ?>
+                                    </td>
+                                    <td>
+                                        <?php if (!$commission['is_paid']): ?>
+                                            <button type="button"
+                                                class="btn btn-sm btn-success process-commission"
+                                                data-id="<?= $commission['commission_id'] ?>"
+                                                data-amount="<?= $commission['commission_amount'] ?>"
+                                                data-month="<?= date('F Y', strtotime($commission['commission_month'])) ?>"
+                                                data-bd-name="<?= htmlspecialchars($bd['bd_name']) ?>">
+                                                Process Payment
+                                            </button>
+                                        <?php else: ?>
+                                            <span class="text-muted">Paid</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="text-center">No commission records found</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -384,30 +457,35 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
         text-align: left !important;
         float: left !important;
     }
+
     div.dataTables_wrapper div.dataTables_filter {
         text-align: right !important;
         float: right !important;
     }
+
     div.dataTables_wrapper div.dataTables_info {
         text-align: left !important;
         float: left !important;
     }
+
     div.dataTables_wrapper div.dataTables_paginate {
         text-align: right !important;
         float: right !important;
     }
+
     div.dataTables_wrapper div.dataTables_length label,
     div.dataTables_wrapper div.dataTables_filter label {
         margin-bottom: 0;
         white-space: nowrap;
         text-align: left;
     }
+
     div.dataTables_wrapper .row:after {
         content: "";
         display: table;
         clear: both;
     }
-    
+
     /* Enhanced Pagination Styling */
     .dataTables_paginate .paginate_button {
         padding: 0.3em 0.8em !important;
@@ -417,20 +495,20 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
         background-color: #2B2B2B !important;
         color: #fff !important;
     }
-    
+
     .dataTables_paginate .paginate_button:hover:not(.disabled):not(.current) {
         background-color: #3d3d3d !important;
         color: #fff !important;
         border-color: #6c757d !important;
     }
-    
+
     .dataTables_paginate .paginate_button.current {
         background-color: #0d6efd !important;
         border-color: #0d6efd !important;
         color: #fff !important;
         font-weight: bold !important;
     }
-    
+
     .dataTables_paginate .paginate_button.disabled {
         opacity: 0.5 !important;
         cursor: not-allowed !important;
@@ -448,10 +526,17 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
         // Initialize DataTable for Linked Buyers
         $('#linkedBuyersTable').DataTable({
             "responsive": true,
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            "order": [[0, "desc"]], // Sort by Buyer ID (descending) by default
-            "columnDefs": [
-                { "orderable": false, "targets": 8 } // Disable sorting on Actions column
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ],
+            "order": [
+                [0, "desc"]
+            ], // Sort by Buyer ID (descending) by default
+            "columnDefs": [{
+                    "orderable": false,
+                    "targets": 8
+                } // Disable sorting on Actions column
             ],
             "language": {
                 "search": "Search buyers:",
@@ -463,14 +548,21 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
             },
             "dom": '<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row"<"col-sm-6"i><"col-sm-6"p>>'
         });
-        
+
         // Initialize DataTable for Referral Bonuses
         $('#referralBonusTable').DataTable({
             "responsive": true,
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            "order": [[4, "desc"]], // Sort by Date Earned (descending) by default
-            "columnDefs": [
-                { "orderable": false, "targets": 7 } // Disable sorting on Actions column
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ],
+            "order": [
+                [4, "desc"]
+            ], // Sort by Date Earned (descending) by default
+            "columnDefs": [{
+                    "orderable": false,
+                    "targets": 7
+                } // Disable sorting on Actions column
             ],
             "language": {
                 "search": "Search bonuses:",
@@ -562,7 +654,7 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                     });
             });
         });
-        
+
         // Pay Referral Bonus
         $(document).on('click', '.pay-bonus-btn', function() {
             if (confirm('Are you sure you want to mark this referral bonus as paid?')) {
@@ -570,11 +662,11 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                 const bdId = $(this).data('bd-id');
                 const button = this;
                 const $row = $(button).closest('tr');
-                
+
                 // Disable the button and show loading state
                 $(button).prop('disabled', true);
                 $(button).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
-                
+
                 // Process payment via AJAX
                 fetch('pay_referral_bonus.php', {
                         method: 'POST',
@@ -588,7 +680,7 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                         if (data.success) {
                             // Show success message
                             alert(data.message);
-                            
+
                             // Get the current date for display
                             const currentDate = new Date();
                             const formattedDate = currentDate.toLocaleString('en-US', {
@@ -598,29 +690,35 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                                 hour: '2-digit',
                                 minute: '2-digit'
                             });
-                            
+
                             // Update the status cell
                             $row.find('td:eq(5)').html('<span class="badge bg-success">Paid</span>');
                             $row.find('td:eq(5)').attr('data-order', '1');
-                            
+
                             // Update the payment date cell
                             $row.find('td:eq(6)').html(formattedDate);
                             $row.find('td:eq(6)').attr('data-order', Math.floor(currentDate.getTime() / 1000));
-                            
+
                             // Update the action cell
                             $row.find('td:eq(7)').html('<span class="text-muted">Paid</span>');
-                            
+
                             // Just update the cells directly without reloading
                             // No need to reload the entire table
-                            
+
                             // Update the statistics
                             const totalBonusAmount = parseFloat($('.total-bonus-amount').text().replace('PKR ', '').replace(/,/g, ''));
                             const paidBonusAmount = parseFloat($('.paid-bonus-amount').text().replace('PKR ', '').replace(/,/g, ''));
                             const unpaidBonusAmount = parseFloat($('.unpaid-bonus-amount').text().replace('PKR ', '').replace(/,/g, ''));
                             const bonusAmount = parseFloat($row.find('td:eq(3)').text().replace('PKR ', '').replace(/,/g, ''));
-                            
-                            $('.paid-bonus-amount').text('PKR ' + (paidBonusAmount + bonusAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-                            $('.unpaid-bonus-amount').text('PKR ' + (unpaidBonusAmount - bonusAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+
+                            $('.paid-bonus-amount').text('PKR ' + (paidBonusAmount + bonusAmount).toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }));
+                            $('.unpaid-bonus-amount').text('PKR ' + (unpaidBonusAmount - bonusAmount).toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }));
                         } else {
                             // Show error message
                             alert('Error: ' + data.message);
@@ -633,6 +731,66 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                         $(button).prop('disabled', false);
                         $(button).html('<i class="fa fa-money-bill"></i> Pay');
                     });
+            }
+        });
+
+        // Commission Processing
+        $('.calculate-commission').on('click', function() {
+            const bdId = $(this).data('bd-id');
+            if (confirm('Are you sure you want to calculate commission for this BD?')) {
+                $.ajax({
+                    url: 'calculate_bd_commission.php',
+                    method: 'POST',
+                    data: {
+                        bd_id: bdId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Commission calculated successfully!');
+                            location.reload();
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred while calculating commission.');
+                    }
+                });
+            }
+        });
+
+        $('.process-commission').on('click', function() {
+            const commissionId = $(this).data('id');
+            const amount = $(this).data('amount');
+            const month = $(this).data('month');
+            const bdName = $(this).data('bd-name');
+
+            if (confirm(`Are you sure you want to process payment of PKR ${amount} to ${bdName} for ${month}?`)) {
+                const button = $(this);
+                button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+
+                $.ajax({
+                    url: 'process_bd_commission.php',
+                    method: 'POST',
+                    data: {
+                        commission_id: commissionId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert('Error: ' + response.message);
+                            button.prop('disabled', false).html('Process Payment');
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred while processing the payment.');
+                        button.prop('disabled', false).html('Process Payment');
+                    }
+                });
             }
         });
     });
