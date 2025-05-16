@@ -1,6 +1,10 @@
 <?php include_once('../../../includes/init.php'); ?>
 <?php include_once('../../includes/nav-side.php'); ?>
-
+<?php
+//show errors
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+?>
 <?php
 // Get database connection properly initialized
 $db = new DB();
@@ -230,14 +234,11 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
 </div>
 
 <!-- Commission Statistics -->
-<div class="row g-4 mt-1">
+<div class="row g-4 mt-1 px-4">
     <div class="col-12">
         <div class="bg-secondary rounded p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="mb-0">Monthly Commissions</h5>
-                <button class="btn btn-primary calculate-commission" data-bd-id="<?= $bd_id ?>">
-                    Calculate Commission
-                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover text-start align-middle">
@@ -269,7 +270,7 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                                             'Not paid' ?>
                                     </td>
                                     <td>
-                                        <?php if (!$commission['is_paid']): ?>
+                                        <?php if (!$commission['is_paid'] && $commission['commission_amount'] > 0): ?>
                                             <button type="button"
                                                 class="btn btn-sm btn-success process-commission"
                                                 data-id="<?= $commission['commission_id'] ?>"
@@ -278,8 +279,10 @@ if ($monthlySalesResult && $monthlySalesResult->num_rows > 0) {
                                                 data-bd-name="<?= htmlspecialchars($bd['bd_name']) ?>">
                                                 Process Payment
                                             </button>
-                                        <?php else: ?>
+                                        <?php elseif ($commission['is_paid']): ?>
                                             <span class="text-muted">Paid</span>
+                                        <?php else: ?>
+                                            <span class="text-muted">No Payment Required</span>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
