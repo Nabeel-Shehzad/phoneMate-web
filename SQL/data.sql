@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 11, 2025 at 10:33 AM
+-- Generation Time: May 17, 2025 at 08:21 AM
 -- Server version: 10.11.10-MariaDB
 -- PHP Version: 7.2.34
 
@@ -64,20 +64,48 @@ INSERT INTO `admin_notification` (`id`, `message`, `date`, `is_read`, `admin_rol
 (29, 'New buyer registration: Khurram', '2025-05-11', 'unread', 'admin', 1);
 
 --
+-- Dumping data for table `bd_monthly_commission`
+--
+
+INSERT INTO `bd_monthly_commission` (`commission_id`, `fk_bd_id`, `commission_month`, `total_sales`, `commission_amount`, `is_paid`, `payment_date`, `created_at`) VALUES
+(1, 1, '2025-04-01', 108000.00, 1080.00, 1, '2025-05-16 16:50:27', '2025-05-16 16:31:02'),
+(2, 2, '2025-04-01', 0.00, 0.00, 0, NULL, '2025-05-16 16:31:02');
+
+--
 -- Dumping data for table `bd_notification`
 --
 
 INSERT INTO `bd_notification` (`id`, `message`, `date`, `is_read`, `fk_bd_id`) VALUES
 (1, 'Welcome to PhoneMate! Your account has been created successfully.', '2025-05-06', 'unread', 1),
 (2, 'Welcome to PhoneMate! Your account has been created successfully.', '2025-05-11', 'unread', 2),
-(3, 'You earned a referral bonus of 500 PKR for new buyer: Khurram', '2025-05-11', 'unread', 2);
+(3, 'You earned a referral bonus of 500 PKR for new buyer: Khurram', '2025-05-11', 'unread', 2),
+(4, 'Your referral bonus of PKR 500.00 has been paid.', '2025-05-11', 'unread', 1),
+(5, 'Your referral bonus of PKR 500.00 has been paid.', '2025-05-11', 'unread', 1),
+(6, 'Your commission for April 2025 has been calculated. Amount: PKR 1,080.00', '2025-05-16', 'unread', 1),
+(7, 'Your commission for April 2025 has been calculated. Amount: PKR 0.00', '2025-05-16', 'unread', 2),
+(8, 'Your commission payment of PKR 1,080.00 for April 2025 has been processed.', '2025-05-16', 'unread', 1);
 
 --
 -- Dumping data for table `bd_referral_bonus`
 --
 
 INSERT INTO `bd_referral_bonus` (`bonus_id`, `bonus_amount`, `date_earned`, `is_paid`, `payment_date`, `fk_bd_id`, `fk_buyer_id`) VALUES
-(1, 500, '2025-05-11 10:21:46', 0, NULL, 2, 25);
+(1, 500, '2025-05-11 10:21:46', 0, NULL, 2, 25),
+(2, 500, '2025-05-11 15:48:48', 0, NULL, 1, 2),
+(3, 500, '2025-05-11 15:48:52', 0, NULL, 1, 2),
+(30, 500, '2025-05-11 15:53:21', 0, NULL, 1, 3),
+(31, 500, '2025-05-11 15:53:21', 0, NULL, 1, 4),
+(32, 500, '2025-05-11 15:53:21', 0, NULL, 1, 5),
+(33, 500, '2025-05-11 15:53:21', 0, NULL, 1, 6),
+(34, 500, '2025-05-11 15:53:21', 0, NULL, 1, 7),
+(35, 500, '2025-05-11 15:53:21', 0, NULL, 1, 12),
+(36, 500, '2025-05-11 15:53:21', 0, NULL, 1, 13),
+(37, 500, '2025-05-11 15:53:21', 0, NULL, 1, 14),
+(38, 500, '2025-05-11 15:53:21', 0, NULL, 1, 15),
+(39, 500, '2025-05-11 15:53:21', 0, NULL, 1, 18),
+(40, 500, '2025-05-11 15:53:21', 1, '2025-05-11 12:33:22', 1, 19),
+(41, 500, '2025-05-11 15:53:21', 1, '2025-05-11 12:31:13', 1, 20),
+(42, 500, '2025-05-11 15:53:21', 1, '2025-05-11 15:57:21', 1, 22);
 
 --
 -- Dumping data for table `brand`

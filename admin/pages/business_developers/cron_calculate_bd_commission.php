@@ -23,31 +23,15 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
   return true;
 });
 
-// Initialize logging
-$logDir = __DIR__ . '/logs';
-$logFile = $logDir . '/bd_commission_' . date('Y-m') . '.log';
-
-// Create logs directory if it doesn't exist
-if (!file_exists($logDir)) {
-  try {
-    mkdir($logDir, 0755, true);
-    file_put_contents($logDir . '/test.txt', 'Log directory created successfully');
-  } catch (Exception $e) {
-    // If we can't create the log directory, log to /tmp
-    $logDir = '/tmp';
-    $logFile = $logDir . '/bd_commission_' . date('Y-m') . '.log';
-  }
-}
+// No logging functionality
 
 /**
- * Function to log messages to the log file
+ * Empty function to replace logging - does nothing
  */
 function logMessage($message)
 {
-  global $logFile;
-  $timestamp = date('Y-m-d H:i:s');
-  $logMessage = "[$timestamp] $message" . PHP_EOL;
-  file_put_contents($logFile, $logMessage, FILE_APPEND);
+  // Logging disabled as requested
+  return;
 }
 
 // Start time for performance tracking

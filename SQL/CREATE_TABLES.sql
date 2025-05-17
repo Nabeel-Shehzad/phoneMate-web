@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: May 11, 2025 at 10:30 AM
--- Server version: 10.11.10-MariaDB
--- PHP Version: 7.2.34
+-- Host: 127.0.0.1
+-- Generation Time: May 17, 2025 at 10:20 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `u650672385_PhoneMate`
+-- Database: `u650672385_phonemate`
 --
 
 -- --------------------------------------------------------
@@ -49,6 +49,23 @@ CREATE TABLE `admin_notification` (
   `is_read` varchar(50) NOT NULL DEFAULT 'unread',
   `admin_role` varchar(50) NOT NULL,
   `fk_wh_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bd_monthly_commission`
+--
+
+CREATE TABLE `bd_monthly_commission` (
+  `commission_id` int(11) NOT NULL,
+  `fk_bd_id` int(11) NOT NULL,
+  `commission_month` date NOT NULL,
+  `total_sales` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `commission_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
+  `payment_date` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -560,6 +577,13 @@ ALTER TABLE `admin_notification`
   ADD KEY `fk_admin_notification_wh_id` (`fk_wh_id`);
 
 --
+-- Indexes for table `bd_monthly_commission`
+--
+ALTER TABLE `bd_monthly_commission`
+  ADD PRIMARY KEY (`commission_id`),
+  ADD KEY `fk_bd_monthly_commission_bd_id` (`fk_bd_id`);
+
+--
 -- Indexes for table `bd_notification`
 --
 ALTER TABLE `bd_notification`
@@ -811,6 +835,12 @@ ALTER TABLE `admin_notification`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `bd_monthly_commission`
+--
+ALTER TABLE `bd_monthly_commission`
+  MODIFY `commission_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `bd_notification`
 --
 ALTER TABLE `bd_notification`
@@ -1023,6 +1053,12 @@ ALTER TABLE `admin`
 --
 ALTER TABLE `admin_notification`
   ADD CONSTRAINT `fk_admin_notification_wh_id` FOREIGN KEY (`fk_wh_id`) REFERENCES `warehouse` (`wh_id`);
+
+--
+-- Constraints for table `bd_monthly_commission`
+--
+ALTER TABLE `bd_monthly_commission`
+  ADD CONSTRAINT `fk_bd_monthly_commission_bd_id` FOREIGN KEY (`fk_bd_id`) REFERENCES `business_developer` (`bd_id`);
 
 --
 -- Constraints for table `bd_notification`
